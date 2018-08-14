@@ -1,0 +1,13 @@
+{
+    "name": "sergey/laravel-permission-gui",
+    "description": "GUI for laravel-permission package",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sergey Krivosheev",
+            "email": "krivosheev@dev-time.ru"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
