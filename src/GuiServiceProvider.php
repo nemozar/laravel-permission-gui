@@ -1,5 +1,7 @@
 <?php
 namespace Nemozar\LaravelPermissionGui;
+use Illuminate\Routing\Router;
+
 /**
  * Сервис провайдер для подключения модулей
  */
@@ -15,7 +17,7 @@ class GuiServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->loadTranslationsFrom(realpath(__DIR__.'/../translations'), 'laravel-permission-gui');
         $this->publishes([
             __DIR__.'/../config/' => base_path('config'),
-        ]);
+        ], 'config');
 
         $this->loadViewsFrom(realpath(__DIR__.'/../views'), 'laravel-permission-gui');
         $this->publishes(
@@ -26,6 +28,8 @@ class GuiServiceProvider extends \Illuminate\Support\ServiceProvider
             [__DIR__.'/../translations' => base_path('resources/lang/vendor/laravel-permission-gui')],
             'translations'
         );
+
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
     }
 
     public function setupRoutes(Router $router)

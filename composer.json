@@ -9,11 +9,13 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "spatie/laravel-permission": "^2.14"
+    },
     "version": "1.0.0",
     "autoload": {
         "psr-4": {
-            "nemozar\\laravel-permission-gui\\": "src"
+            "Nemozar\\LaravelPermissionGui\\": "src"
         }
     }
 }
