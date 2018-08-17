@@ -1,6 +1,6 @@
 <?php return [
-    'success' => 'Success:',
-    'error' => 'Error:',
-    'warning' => 'Warning:',
-    'info' => 'FYI:',
+    'success' => 'Успешно:',
+    'error' => 'Ошибка:',
+    'warning' => 'Предупреждение:',
+    'info' => 'Информация:',
 ];

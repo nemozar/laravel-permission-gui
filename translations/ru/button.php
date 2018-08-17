@@ -1,10 +1,10 @@
 <?php return [
-    'create' => 'Create',
-    'cancel' => 'Cancel',
-    'save' => 'Save',
-    'edit' => 'Edit',
-    'delete' => 'Delete',
-    'create-user' => 'Create User',
-    'create-permission' => 'Create Permission',
-    'create-role' => 'Create Role',
+    'create' => 'Создать',
+    'cancel' => 'Отмена',
+    'save' => 'Сохранить',
+    'edit' => 'Редактировать',
+    'delete' => 'Удалить',
+    'create-user' => 'Добавить пользователя',
+    'create-permission' => 'Добавить полночия',
+    'create-role' => 'Добавить роль',
 ];

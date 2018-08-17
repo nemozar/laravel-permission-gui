@@ -105,7 +105,7 @@ class UsersController extends Controller
      *
      * @return Response
      */
-    public function update($id)
+    public function update(Request $request, $id)
     {
         try {
             $this->gateway->update($this->request, $id);
