@@ -1,26 +1,20 @@
 <?php namespace Nemozar\LaravelPermissionGui\Http\Controllers;
 
-use Acoustep\EntrustGui\Gateways\RoleGateway;
-use Illuminate\Config\Repository as Config;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Exceptions\RoleAlreadyExists;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RolesController extends Controller
 {
 
-    protected $request;
-    protected $relation;
-    protected $config;
-    protected $relation_name;
-
-
-    public function __construct(Request $request, Config $config)
-    {
-        $this->config = $config;
-        $this->request = $request;
-        $this->relation = new Role();
-    }
+    protected $rules = [
+        'name' => 'required|unique:roles|max:255',
+        'full_name' => 'required|max:255',
+    ];
 
     /**
      * Display a listing of the resource.
@@ -31,6 +25,8 @@ class RolesController extends Controller
     public function index()
     {
         $models = Role::all();
+
+
 
         return view('laravel-permission-gui::roles.index', compact(
             "models"
@@ -45,13 +41,11 @@ class RolesController extends Controller
      */
     public function create()
     {
-        $model_class = $this->config->get('entrust.'.str_singular($this->resource));
-        $model = new $model_class;
-        $relations = $this->relation->lists('name', 'id');
-
-        return view('laravel-permission-gui::'.$this->resource.'.create', compact(
+        $model = new Role();
+        $permissions = Permission::all();
+        return view('laravel-permission-gui::roles.create', compact(
             'model',
-            'relations'
+            'permissions'
         ));
     }
 
@@ -61,20 +55,20 @@ class RolesController extends Controller
      *
      * @return Response
      */
-    public function store()
+    public function store(Request $request)
     {
-        try {
-            $this->gateway->create($this->request);
-        } catch (ValidationException $e) {
-            return back()->withErrors($e->getErrors())->withInput();
+        try{
+            $role = Role::create($request->except('permissions'));
+        }catch (\Exception $e){
+            return  redirect()->back()->withErrors( $e->getMessage())->withInput();
         }
         return redirect(
             route(
-                'laravel-permission-gui::'.$this->resource.'.index'
+                'laravel-permission-gui::roles.index'
             )
         )->withSuccess(
             trans(
-                'laravel-permission-gui::'.$this->resource.'.created'
+                'laravel-permission-gui::roles.created'
             )
         );
     }
@@ -89,12 +83,12 @@ class RolesController extends Controller
      */
     public function edit($id)
     {
-        $model = $this->gateway->find($id);
-        $relations = $this->relation->lists('name', 'id');
+        $model = Role::findById($id);
+        $permissions = Permission::all();
 
-        return view('laravel-permission-gui::'.$this->resource.'.edit', compact(
+        return view('laravel-permission-gui::roles.edit', compact(
             'model',
-            'relations'
+            'permissions'
         ));
     }
 
@@ -106,20 +100,25 @@ class RolesController extends Controller
      *
      * @return Response
      */
-    public function update($id)
+    public function update($id, Request $request)
     {
-        try {
-            $role = $this->gateway->update($this->request, $id);
-        } catch (ValidationException $e) {
-            return back()->withErrors($e->getErrors())->withInput();
+        $role = Role::findById($id);
+
+        $role->fill($request->except('permissions'));
+        $v = Validator::make($role->getAttributes(), $this->rules);
+        if ($v->fails())
+        {
+            return back()->withErrors($v->errors())->withInput();
         }
+        $role->save();
+
         return redirect(
             route(
-                'laravel-permission-gui::'.$this->resource.'.index'
+                'laravel-permission-gui::roles.index'
             )
         )->withSuccess(
             trans(
-                'laravel-permission-gui::'.$this->resource.'.updated'
+                'laravel-permission-gui::roles.updated'
             )
         );
     }
@@ -134,14 +133,14 @@ class RolesController extends Controller
      */
     public function destroy($id)
     {
-        $this->gateway->delete($id);
+        Role::findById($id)->delete();
         return redirect(
             route(
-                'laravel-permission-gui::'.$this->resource.'.index'
+                'laravel-permission-gui::roles.index'
             )
         )->withSuccess(
             trans(
-                'laravel-permission-gui::'.$this->resource.'.destroyed'
+                'laravel-permission-gui::roles.destroyed'
             )
         );
     }

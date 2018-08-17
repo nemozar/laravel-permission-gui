@@ -1,9 +1,5 @@
 <?php
-Route::group(
-    [
-        'prefix' => Config::get("laravel-permission-gui.route-prefix"),
-        'middleware' => Config::get("laravel-permission-gui.middleware")
-    ],
+Route::prefix(Config::get("laravel-permission-gui.route-prefix"))->middleware(Config::get("laravel-permission-gui.middleware"))->group(
     function () {
         Route::get('users', ['uses' => 'UsersController@index', 'as' => 'laravel-permission-gui::users.index']);
         Route::get('users/create', ['uses' => 'UsersController@create', 'as' => 'laravel-permission-gui::users.create']);
