@@ -45,3 +45,15 @@ Route::prefix(Config::get("laravel-permission-gui.route-prefix"))->middleware(Co
         );
     }
 );
+Route::prefix(Config::get("laravel-permission-gui.route-prefix"))->group(
+    function(){
+        Route::get('install', [
+            'uses' => 'MainController@install',
+            'as' => 'laravel-permission-gui::install'
+        ]);
+        Route::post('install', [
+            'uses' => 'MainController@setuser',
+            'as' => 'laravel-permission-gui::setuser'
+        ]);
+    }
+);

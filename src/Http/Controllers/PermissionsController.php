@@ -4,22 +4,16 @@ use Acoustep\EntrustGui\Gateways\PermissionGateway;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
-/**
- * This file is part of Entrust GUI,
- * A Laravel 5 GUI for Entrust.
- *
- * @license MIT
- * @package Acoustep\EntrustGui
- */
 class PermissionsController extends Controller
 {
     protected $request;
     protected $relation;
     protected $config;
     protected $relation_name;
-
 
     public function __construct(Request $request, Config $config)
     {
@@ -51,13 +45,12 @@ class PermissionsController extends Controller
      */
     public function create()
     {
-        $model_class = $this->config->get('entrust.'.str_singular($this->resource));
-        $model = new $model_class;
-        $relations = $this->relation->lists('name', 'id');
+        $model = new Permission();
+        $roles = Role::all();
 
-        return view('laravel-permission-gui::'.$this->resource.'.create', compact(
+        return view('laravel-permission-gui::permissions.create', compact(
             'model',
-            'relations'
+            'roles'
         ));
     }
 
@@ -67,20 +60,20 @@ class PermissionsController extends Controller
      *
      * @return Response
      */
-    public function store()
+    public function store(Request $request)
     {
         try {
-            $this->gateway->create($this->request);
-        } catch (ValidationException $e) {
-            return back()->withErrors($e->getErrors())->withInput();
+            $permission = Permission::create($request->except('roles'));
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage())->withInput();
         }
         return redirect(
             route(
-                'laravel-permission-gui::'.$this->resource.'.index'
+                'laravel-permission-gui::permissions.index'
             )
         )->withSuccess(
             trans(
-                'laravel-permission-gui::'.$this->resource.'.created'
+                'laravel-permission-gui::permissions.created'
             )
         );
     }
@@ -95,12 +88,12 @@ class PermissionsController extends Controller
      */
     public function edit($id)
     {
-        $model = $this->gateway->find($id);
-        $relations = $this->relation->lists('name', 'id');
+        $model = Permission::findById($id);
+        $roles = Role::all();
 
-        return view('laravel-permission-gui::'.$this->resource.'.edit', compact(
+        return view('laravel-permission-gui::permissions.edit', compact(
             'model',
-            'relations'
+            'roles'
         ));
     }
 
@@ -112,20 +105,25 @@ class PermissionsController extends Controller
      *
      * @return Response
      */
-    public function update($id)
+    public function update($id, Request $request)
     {
-        try {
-            $role = $this->gateway->update($this->request, $id);
-        } catch (ValidationException $e) {
-            return back()->withErrors($e->getErrors())->withInput();
+        $permission = Permission::findById($id);
+        $request->validate([
+            'name' => 'required|unique:permissions,name,'.$id.'|max:255',
+            'display_name' => 'required|max:255',
+        ]);
+        $permission->fill($request->except('roles'));
+        $permission->save();
+        if (count($request->get('roles')) >0){
+            $permission->syncRoles($request->get('roles'));
         }
         return redirect(
             route(
-                'laravel-permission-gui::'.$this->resource.'.index'
+                'laravel-permission-gui::permissions.index'
             )
         )->withSuccess(
             trans(
-                'laravel-permission-gui::'.$this->resource.'.updated'
+                'laravel-permission-gui::permissions.updated'
             )
         );
     }
@@ -140,14 +138,14 @@ class PermissionsController extends Controller
      */
     public function destroy($id)
     {
-        $this->gateway->delete($id);
+        $permission = Permission::findById($id);
         return redirect(
             route(
-                'laravel-permission-gui::'.$this->resource.'.index'
+                'laravel-permission-gui::permissions.index'
             )
         )->withSuccess(
             trans(
-                'laravel-permission-gui::'.$this->resource.'.destroyed'
+                'laravel-permission-gui::permissions.destroyed'
             )
         );
     }

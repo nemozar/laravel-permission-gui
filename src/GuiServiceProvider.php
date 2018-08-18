@@ -34,6 +34,9 @@ class GuiServiceProvider extends \Illuminate\Support\ServiceProvider
 
     public function setupRoutes(Router $router)
     {
+        $router->aliasMiddleware('role', \Spatie\Permission\Middlewares\RoleMiddleware::class);
+        $router->aliasMiddleware('permission', \Spatie\Permission\Middlewares\PermissionMiddleware::class);
+
         $router->group(
             ['namespace' => 'Nemozar\LaravelPermissionGui\Http\Controllers'],
             function ($router) {

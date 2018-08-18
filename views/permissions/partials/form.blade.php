@@ -14,8 +14,17 @@
 <div class="form-group">
     <label for="roles">Roles</label>
     <select name="roles[]" multiple class="form-control">
-        @foreach($relations as $index => $relation)
-            <option value="{{ $index }}" {{ ((in_array($index, old('roles', []))) || ( ! Session::has('errors') && $model->roles->contains('id', $index))) ? 'selected' : '' }}>{{ $relation }}</option>
+        @foreach($roles as $index => $role)
+            <option value="{{ $role->id }}" {{ ((in_array($role->id, old('roles', []))) || ( ! Session::has('errors') && $role->hasPermissionTo($model->name))) ? 'selected' : '' }}>{{ $role->display_name }}</option>
         @endforeach
     </select>
 </div>
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif

@@ -7,13 +7,6 @@ use Spatie\Permission\Models\Role;
 use Watson\Validating\ValidationException;
 use Illuminate\Config\Repository as Config;
 
-/**
- * This file is part of Entrust GUI,
- * A Laravel 5 GUI for Entrust.
- *
- * @license MIT
- * @package Acoustep\EntrustGui
- */
 class UsersController extends Controller
 {
 
@@ -71,7 +64,7 @@ class UsersController extends Controller
         }
         return redirect(route('laravel-permission-gui::users.index'))
             ->withSuccess(trans('laravel-permission-gui::users.created'));
-  
+
     }
 
     /**

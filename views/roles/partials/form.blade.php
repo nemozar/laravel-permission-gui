@@ -4,8 +4,8 @@
     <input type="input" class="form-control" id="name" placeholder="{{trans('laravel-permission-gui::db.name')}}" name="name" value="{{ (Session::has('errors')) ? old('name', '') : $model->name }}">
 </div>
 <div class="form-group">
-    <label for="display_name">{{trans('laravel-permission-gui::db.full_name')}}</label>
-    <input type="input" class="form-control" id="full_name" placeholder="{{trans('laravel-permission-gui::db.full_name')}}" name="full_name" value="{{ (Session::has('errors')) ? old('full_name', '') : $model->full_name }}">
+    <label for="display_name">{{trans('laravel-permission-gui::db.display_name')}}</label>
+    <input type="input" class="form-control" id="display_name" placeholder="{{trans('laravel-permission-gui::db.display_name')}}" name="display_name" value="{{ (Session::has('errors')) ? old('display_name', '') : $model->display_name }}">
 </div>
 <div class="form-group">
     <label for="description">{{trans('laravel-permission-gui::db.description')}}</label>
@@ -15,7 +15,7 @@
     <label for="permissions">{{trans('laravel-permission-gui::db.permissions')}}</label>
     <select name="permissions[]" multiple class="form-control">
       @foreach($permissions as $index => $permission)
-        <option value="{{ $index }}" {{ ((in_array($index, old('permissions', []))) || ( ! Session::has('errors') && $model->hasPermissionTo($permission->name))) ? 'selected' : '' }}>{{ $permission->full_name }}</option>
+        <option value="{{ $permission->id }}" {{ ((in_array($permission->id, old('permissions', []))) || ( ! Session::has('errors') && $model->hasPermissionTo($permission->name))) ? 'selected' : '' }}>{{ $permission->display_name }}</option>
       @endforeach
     </select>
 </div>

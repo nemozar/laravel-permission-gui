@@ -2,19 +2,13 @@
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use Spatie\Permission\Exceptions\RoleAlreadyExists;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RolesController extends Controller
 {
 
-    protected $rules = [
-        'name' => 'required|unique:roles|max:255',
-        'full_name' => 'required|max:255',
-    ];
 
     /**
      * Display a listing of the resource.
@@ -25,9 +19,6 @@ class RolesController extends Controller
     public function index()
     {
         $models = Role::all();
-
-
-
         return view('laravel-permission-gui::roles.index', compact(
             "models"
         ));
@@ -103,15 +94,15 @@ class RolesController extends Controller
     public function update($id, Request $request)
     {
         $role = Role::findById($id);
-
+        $request->validate([
+            'name' => 'required|unique:roles,name,'.$id.'|max:255',
+            'display_name' => 'required|max:255',
+        ]);
         $role->fill($request->except('permissions'));
-        $v = Validator::make($role->getAttributes(), $this->rules);
-        if ($v->fails())
-        {
-            return back()->withErrors($v->errors())->withInput();
-        }
         $role->save();
-
+        if (count($request->get('permissions')) > 0){
+            $role->syncPermissions($request->get('permissions'));
+        }
         return redirect(
             route(
                 'laravel-permission-gui::roles.index'
