@@ -15,7 +15,7 @@
     <label for="roles">Roles</label>
     <select name="roles[]" multiple class="form-control">
         @foreach($roles as $index => $role)
-            <option value="{{ $role->id }}" {{ ((in_array($role->id, old('roles', []))) || ( ! Session::has('errors') && $role->hasPermissionTo($model->name))) ? 'selected' : '' }}>{{ $role->display_name }}</option>
+            <option value="{{ $role->id }}" {{ ((in_array($role->id, old('roles', []))) || ( ! Session::has('errors') && $model->name && $role->hasPermissionTo($model->name))) ? 'selected' : '' }}>{{ $role->display_name }}</option>
         @endforeach
     </select>
 </div>

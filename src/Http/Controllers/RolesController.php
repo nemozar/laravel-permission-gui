@@ -50,6 +50,9 @@ class RolesController extends Controller
     {
         try{
             $role = Role::create($request->except('permissions'));
+            if (count($request->get('permissions')) > 0){
+                $role->syncPermissions($request->get('permissions'));
+            }
         }catch (\Exception $e){
             return  redirect()->back()->withErrors( $e->getMessage())->withInput();
         }

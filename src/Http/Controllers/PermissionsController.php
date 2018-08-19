@@ -64,6 +64,9 @@ class PermissionsController extends Controller
     {
         try {
             $permission = Permission::create($request->except('roles'));
+            if (count($request->get('roles')) >0){
+                $permission->syncRoles($request->get('roles'));
+            }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage())->withInput();
         }
@@ -139,6 +142,7 @@ class PermissionsController extends Controller
     public function destroy($id)
     {
         $permission = Permission::findById($id);
+        $permission->delete();
         return redirect(
             route(
                 'laravel-permission-gui::permissions.index'
