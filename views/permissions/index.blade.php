@@ -1,6 +1,7 @@
 @extends(Config::get('laravel-permission-gui.layout'))
 
-@section('heading', 'Permissions')
+@section('heading', trans('laravel-permission-gui::head.permissions'))
+
 @section('tabsadd')
     <a class="btn btn-labeled btn-primary" href="{{ route('laravel-permission-gui::permissions.create') }}"><span class="btn-label"><i class="fa fa-plus"></i></span>{{ trans('laravel-permission-gui::button.create-permission') }}</a>
 @endsection

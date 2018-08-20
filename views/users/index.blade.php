@@ -1,7 +1,7 @@
 @extends(Config::get('laravel-permission-gui.layout'))
 
 
-@section('heading', 'Users')
+@section('heading', trans('laravel-permission-gui::head.users'))
 
 @section('content')
     @include('laravel-permission-gui::partials.navigation')

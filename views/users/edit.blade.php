@@ -1,6 +1,6 @@
 @extends(Config::get('laravel-permission-gui.layout'))
 
-@section('heading', 'Edit User')
+@section('heading', trans('laravel-permission-gui::head.edit_user'))
 
 @section('content')
 <form action="{{ route('laravel-permission-gui::users.update', $user->id) }}" method="post" role="form">
@@ -8,7 +8,7 @@
 
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <div class="form-group">
-        <label for="roles">Roles</label>
+        <label for="roles">{{trans('laravel-permission-gui::head.roles')}}</label>
         <select name="roles[]" id="roles" multiple class="form-control">
             @foreach($roles as $index => $role)
                 <option value="{{ $index }}" {{ ((in_array($index, old('roles', []))) || ( ! Session::has('errors') && $user->roles->contains('id', $index))) ? 'selected' : '' }}>{{ $role }}</option>

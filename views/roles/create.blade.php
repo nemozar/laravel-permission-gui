@@ -1,6 +1,6 @@
 @extends(Config::get('laravel-permission-gui.layout'))
 
-@section('heading', 'Create Role')
+@section('heading', trans('laravel-permission-gui::head.role_create'))
 
 @section('content')
 <form action="{{ route('laravel-permission-gui::roles.store') }}" method="post" role="form">

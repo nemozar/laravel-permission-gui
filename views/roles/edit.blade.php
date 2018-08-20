@@ -1,6 +1,6 @@
 @extends(Config::get('laravel-permission-gui.layout'))
 
-@section('heading', 'Edit Role')
+@section('heading', trans('laravel-permission-gui::head.edit_role'))
 
 @section('content')
 <form action="{{ route('laravel-permission-gui::roles.update', $model->id) }}" method="post" role="form">
