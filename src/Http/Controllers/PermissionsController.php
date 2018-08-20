@@ -62,6 +62,10 @@ class PermissionsController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|max:255',
+            'display_name' => 'required|max:255',
+        ]);
         try {
             $permission = Permission::create($request->except('roles'));
             if (count($request->get('roles')) >0){

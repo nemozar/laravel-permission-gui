@@ -4,6 +4,7 @@
 @section('heading', trans('laravel-permission-gui::head.users'))
 
 @section('content')
+    @include('laravel-permission-gui::partials.notifications')
     @include('laravel-permission-gui::partials.navigation')
 
     <table class="table table-striped">

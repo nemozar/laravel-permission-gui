@@ -4,8 +4,8 @@
 
 @section('content')
 <form action="{{ route('laravel-permission-gui::users.update', $user->id) }}" method="post" role="form">
+    @include('laravel-permission-gui::partials.notifications')
     <input type="hidden" name="_method" value="put">
-
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="roles">{{trans('laravel-permission-gui::head.roles')}}</label>
@@ -15,7 +15,6 @@
             @endforeach
         </select>
     </div>
-
     <button type="submit" id="save" class="btn btn-labeled btn-primary"><span class="btn-label"><i class="fa fa-check"></i></span>{{ trans('laravel-permission-gui::button.save') }}</button>
     <a class="btn btn-labeled btn-primary" href="{{ route('laravel-permission-gui::users.index') }}"><span class="btn-label"><i class="fa fa-chevron-left"></i></span>{{ trans('laravel-permission-gui::button.cancel') }}</a>
 </form>

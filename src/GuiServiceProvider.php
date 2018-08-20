@@ -9,6 +9,8 @@ class GuiServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     public function boot()
     {
+//        $this->app->register('Spatie\Permission\PermissionServiceProvider');
+
         $this->mergeConfigFrom(
             __DIR__.'/../config/laravel-permission-gui.php',
             'laravel-permission-gui'
@@ -36,6 +38,8 @@ class GuiServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $router->aliasMiddleware('role', \Spatie\Permission\Middlewares\RoleMiddleware::class);
         $router->aliasMiddleware('permission', \Spatie\Permission\Middlewares\PermissionMiddleware::class);
+
+
 
         $router->group(
             ['namespace' => 'Nemozar\LaravelPermissionGui\Http\Controllers'],

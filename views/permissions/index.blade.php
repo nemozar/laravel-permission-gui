@@ -6,6 +6,7 @@
     <a class="btn btn-labeled btn-primary" href="{{ route('laravel-permission-gui::permissions.create') }}"><span class="btn-label"><i class="fa fa-plus"></i></span>{{ trans('laravel-permission-gui::button.create-permission') }}</a>
 @endsection
 @section('content')
+    @include('laravel-permission-gui::partials.notifications')
     @include('laravel-permission-gui::partials.navigation')
     <table class="table table-striped">
         <tr>

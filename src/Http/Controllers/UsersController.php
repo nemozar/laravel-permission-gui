@@ -10,25 +10,6 @@ use Illuminate\Config\Repository as Config;
 class UsersController extends Controller
 {
 
-    protected $request;
-    protected $role;
-    protected $config;
-
-    /**
-     * Create a new UsersController instance.
-     *
-     * @param Request $request
-     * @param Config $config
-     *
-     * @return void
-     */
-    public function __construct(Request $request, Config $config)
-    {
-        $this->config = $config;
-        $this->request = $request;
-        $this->role = new Role();
-    }
-
     /**
      * Display a listing of the resource.
      * GET /roles
@@ -38,33 +19,12 @@ class UsersController extends Controller
     public function index()
     {
         $users = User::all();
-
         return view(
             'laravel-permission-gui::users.index',
             compact(
                 'users'
             )
         );
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     * POST /roles
-     *
-     * @return Response
-     */
-    public function store()
-    {
-        try {
-            $user = $this->gateway->create($this->request);
-        } catch (ValidationException $e) {
-            return redirect(route('laravel-permission-gui::users.create'))
-                ->withErrors($e->getErrors())
-                ->withInput();
-        }
-        return redirect(route('laravel-permission-gui::users.index'))
-            ->withSuccess(trans('laravel-permission-gui::users.created'));
-
     }
 
     /**
@@ -100,30 +60,12 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try {
-            $this->gateway->update($this->request, $id);
-        } catch (ValidationException $e) {
-            return back()->withErrors($e->getErrors())->withInput();
+        if ($request->get('roles')){
+            $user = User::find($id);
+            $user->syncRoles($request->get('roles'));
         }
         return redirect(route('laravel-permission-gui::users.index'))
             ->withSuccess(trans('laravel-permission-gui::users.updated'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * DELETE /roles/{id}
-     *
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        if (!config('laravel-permission-gui.users.deletable')) {
-            abort(404);
-        }
-        $this->gateway->delete($id);
-        return redirect(route('laravel-permission-gui::users.index'))
-            ->withSuccess(trans('laravel-permission-gui::users.destroyed'));
-    }
 }

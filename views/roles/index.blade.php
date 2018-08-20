@@ -5,6 +5,7 @@
     <a class="btn btn-labeled btn-primary" href="{{ route('laravel-permission-gui::roles.create') }}"><span class="btn-label"><i class="fa fa-plus"></i></span>{{ trans('laravel-permission-gui::button.create-role') }}</a>
 @endsection
 @section('content')
+    @include('laravel-permission-gui::partials.notifications')
     @include('laravel-permission-gui::partials.navigation')
     <table class="table table-striped">
         <tr>

@@ -48,6 +48,10 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|max:255',
+            'display_name' => 'required|max:255',
+        ]);
         try{
             $role = Role::create($request->except('permissions'));
             if (count($request->get('permissions')) > 0){
