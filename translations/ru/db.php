@@ -5,4 +5,5 @@
     'installed' => 'Модуль уже инициализирован',
     'email' => 'Электронная почта',
     'actions' => 'Действия',
+    'confirm_delete' => "Are you sure you want to delete?"
 ];
