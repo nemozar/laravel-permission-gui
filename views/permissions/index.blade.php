@@ -19,7 +19,7 @@
                 <td>{{ $model->name }}</th>
                 <td>{{ $model->display_name }}</th>
                 <td class="col-xs-3">
-                    <form action="{{ route('laravel-permission-gui::permissions.destroy', $model->id) }}" method="post">
+                    <form action="{{ route('laravel-permission-gui::permissions.destroy', $model->id) }}" onsubmit="return confirm('{{trans("laravel-permission-gui::db.confirm_delete")}}')" method="post">
                         <input type="hidden" name="_method" value="DELETE">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <a class="btn btn-labeled btn-primary" href="{{ route('laravel-permission-gui::permissions.edit', $model->id) }}"><span class="btn-label"><i class="fa fa-pencil"></i></span>{{ trans('laravel-permission-gui::button.edit') }}</a>
