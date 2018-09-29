@@ -1,13 +1,11 @@
 <?php namespace Nemozar\LaravelPermissionGui\Http\Controllers;
 
 use App\User;
-use Nemozar\LaravelPermissionGui\Http\Controllers\ProxyController as Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Watson\Validating\ValidationException;
-use Illuminate\Config\Repository as Config;
 
-class UsersController extends Controller
+class UsersController extends ProxyController
 {
 
     /**
@@ -16,7 +14,7 @@ class UsersController extends Controller
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index()
     {
         $users = User::all();
         return $this->view(
@@ -40,7 +38,7 @@ class UsersController extends Controller
         $user = User::find($id);
         $roles = Role::pluck('name', 'id')->all();
 
-        return view(
+        return $this->view(
             'laravel-permission-gui::users.edit',
             compact(
                 'user',
@@ -60,12 +58,16 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $user = User::find($id);
         if ($request->get('roles')){
-            $user = User::find($id);
             $user->syncRoles($request->get('roles'));
         }
-        return redirect(route('laravel-permission-gui::users.index'))
-            ->withSuccess(trans('laravel-permission-gui::users.updated'));
+        if ($this->isApi()){
+            return $user;
+        }else {
+            return redirect(route('laravel-permission-gui::users.index'))
+                ->withSuccess(trans('laravel-permission-gui::users.updated'));
+        }
     }
 
 }

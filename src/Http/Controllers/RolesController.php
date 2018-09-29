@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class RolesController extends Controller
+class RolesController extends ProxyController
 {
 
 
@@ -18,9 +18,9 @@ class RolesController extends Controller
      */
     public function index()
     {
-        $models = Role::all();
-        return view('laravel-permission-gui::roles.index', compact(
-            "models"
+        $roles = Role::all();
+        return $this->view('laravel-permission-gui::roles.index', compact(
+            "roles"
         ));
     }
 
@@ -49,7 +49,7 @@ class RolesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
+            'name' => 'required|unique:roles,name|max:255',
             'display_name' => 'required|max:255',
         ]);
         try{
@@ -58,17 +58,28 @@ class RolesController extends Controller
                 $role->syncPermissions($request->get('permissions'));
             }
         }catch (\Exception $e){
-            return  redirect()->back()->withErrors( $e->getMessage())->withInput();
+            if ($this->isApi()){
+                $error = \Illuminate\Validation\ValidationException::withMessages([
+                    'name' => [$e->getMessage()]
+                ]);
+                throw $error;
+            }else {
+                return redirect()->back()->withErrors($e->getMessage())->withInput();
+            }
         }
-        return redirect(
-            route(
-                'laravel-permission-gui::roles.index'
-            )
-        )->withSuccess(
-            trans(
-                'laravel-permission-gui::roles.created'
-            )
-        );
+        if ($this->isApi()){
+            return $role;
+        }else {
+            return redirect(
+                route(
+                    'laravel-permission-gui::roles.index'
+                )
+            )->withSuccess(
+                trans(
+                    'laravel-permission-gui::roles.created'
+                )
+            );
+        }
     }
 
     /**
@@ -110,15 +121,19 @@ class RolesController extends Controller
         if (count($request->get('permissions')) > 0){
             $role->syncPermissions($request->get('permissions'));
         }
-        return redirect(
-            route(
-                'laravel-permission-gui::roles.index'
-            )
-        )->withSuccess(
-            trans(
-                'laravel-permission-gui::roles.updated'
-            )
-        );
+        if ($this->isApi()){
+            return $role;
+        }else {
+            return redirect(
+                route(
+                    'laravel-permission-gui::roles.index'
+                )
+            )->withSuccess(
+                trans(
+                    'laravel-permission-gui::roles.updated'
+                )
+            );
+        }
     }
 
     /**
@@ -132,14 +147,18 @@ class RolesController extends Controller
     public function destroy($id)
     {
         Role::findById($id)->delete();
-        return redirect(
-            route(
-                'laravel-permission-gui::roles.index'
-            )
-        )->withSuccess(
-            trans(
-                'laravel-permission-gui::roles.destroyed'
-            )
-        );
+        if ($this->isApi()){
+            return ['status' => 'success'];
+        }else {
+            return redirect(
+                route(
+                    'laravel-permission-gui::roles.index'
+                )
+            )->withSuccess(
+                trans(
+                    'laravel-permission-gui::roles.destroyed'
+                )
+            );
+        }
     }
 }

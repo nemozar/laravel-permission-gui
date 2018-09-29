@@ -14,15 +14,15 @@
             <th>{{trans('laravel-permission-gui::db.display_name')}}</th>
             <th>{{trans('laravel-permission-gui::db.actions')}}</th>
         </tr>
-        @foreach($models as $model)
+        @foreach($permissions as $permission)
             <tr>
-                <td>{{ $model->name }}</th>
-                <td>{{ $model->display_name }}</th>
+                <td>{{ $permission->name }}</th>
+                <td>{{ $permission->display_name }}</th>
                 <td class="col-xs-3">
-                    <form action="{{ route('laravel-permission-gui::permissions.destroy', $model->id) }}" onsubmit="return confirm('{{trans("laravel-permission-gui::db.confirm_delete")}}')" method="post">
+                    <form action="{{ route('laravel-permission-gui::permissions.destroy', $permission->id) }}" onsubmit="return confirm('{{trans("laravel-permission-gui::db.confirm_delete")}}')" method="post">
                         <input type="hidden" name="_method" value="DELETE">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <a class="btn btn-labeled btn-primary" href="{{ route('laravel-permission-gui::permissions.edit', $model->id) }}"><span class="btn-label"><i class="fa fa-pencil"></i></span>{{ trans('laravel-permission-gui::button.edit') }}</a>
+                        <a class="btn btn-labeled btn-primary" href="{{ route('laravel-permission-gui::permissions.edit', $permission->id) }}"><span class="btn-label"><i class="fa fa-pencil"></i></span>{{ trans('laravel-permission-gui::button.edit') }}</a>
                         <button type="submit" class="btn btn-labeled btn-danger"><span class="btn-label"><i class="fa fa-trash"></i></span>{{ trans('laravel-permission-gui::button.delete') }}</button>
                     </form>
                 </td>

@@ -13,7 +13,7 @@ Route::prefix(Config::get("laravel-permission-gui.route-prefix"))->middleware(Co
         Route::get('roles/{id}/edit', ['uses' => 'RolesController@edit', 'as' => 'laravel-permission-gui::roles.edit']);
         Route::put('roles/{id}', ['uses' => 'RolesController@update', 'as' => 'laravel-permission-gui::roles.update']);
         Route::delete('roles/{id}', ['uses' => 'RolesController@destroy', 'as' => 'laravel-permission-gui::roles.destroy']);
-        Route::get('permissions', ['uses' => 'PermissionsController@index', 'as' => 'laravel-permission-gui::permissions.index']);
+
         Route::get(
             'permissions/create',
             [
@@ -21,7 +21,6 @@ Route::prefix(Config::get("laravel-permission-gui.route-prefix"))->middleware(Co
                 'as' => 'laravel-permission-gui::permissions.create'
             ]
         );
-        Route::post('permissions', ['uses' => 'PermissionsController@store', 'as' => 'laravel-permission-gui::permissions.store']);
         Route::get(
             'permissions/{id}/edit',
             [
@@ -29,6 +28,8 @@ Route::prefix(Config::get("laravel-permission-gui.route-prefix"))->middleware(Co
                 'as' => 'laravel-permission-gui::permissions.edit'
             ]
         );
+        Route::get('permissions', ['uses' => 'PermissionsController@index', 'as' => 'laravel-permission-gui::permissions.index']);
+        Route::post('permissions', ['uses' => 'PermissionsController@store', 'as' => 'laravel-permission-gui::permissions.store']);
         Route::put(
             'permissions/{id}',
             [
