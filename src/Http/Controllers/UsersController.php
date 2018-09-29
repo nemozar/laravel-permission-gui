@@ -1,7 +1,7 @@
 <?php namespace Nemozar\LaravelPermissionGui\Http\Controllers;
 
 use App\User;
-use Illuminate\Routing\Controller as Controller;
+use Nemozar\LaravelPermissionGui\Http\Controllers\ProxyController as Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Watson\Validating\ValidationException;
@@ -16,10 +16,10 @@ class UsersController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $users = User::all();
-        return view(
+        return $this->view(
             'laravel-permission-gui::users.index',
             compact(
                 'users'
