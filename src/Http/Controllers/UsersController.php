@@ -61,7 +61,7 @@ class UsersController extends ProxyController
     public function update(Request $request, $id)
     {
         $user = User::find($id);
-        if ($request->get('roles')){
+        if (is_array($request->get('roles'))){
             $user->syncRoles($request->get('roles'));
         }
         if ($this->isApi()){
