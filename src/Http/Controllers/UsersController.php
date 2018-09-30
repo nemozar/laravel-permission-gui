@@ -36,13 +36,15 @@ class UsersController extends ProxyController
     public function edit($id)
     {
         $user = User::find($id);
-        $roles = Role::pluck('name', 'id')->all();
+        $activeRoles = $user->roles;
+        $roles = Role::all();
 
         return $this->view(
             'laravel-permission-gui::users.edit',
             compact(
                 'user',
-                'roles'
+                'roles',
+                'activeRoles'
             )
         );
   
