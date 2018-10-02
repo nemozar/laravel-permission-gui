@@ -92,12 +92,14 @@ class RolesController extends ProxyController
      */
     public function edit($id)
     {
-        $model = Role::findById($id);
+        $role = Role::findById($id);
         $permissions = Permission::all();
+        $activePermissions = $role->permissions;
 
-        return view('laravel-permission-gui::roles.edit', compact(
-            'model',
-            'permissions'
+        return $this->view('laravel-permission-gui::roles.edit', compact(
+            'role',
+            'permissions',
+            'activePermissions'
         ));
     }
 
@@ -112,13 +114,15 @@ class RolesController extends ProxyController
     public function update($id, Request $request)
     {
         $role = Role::findById($id);
-        $request->validate([
-            'name' => 'required|unique:roles,name,'.$id.'|max:255',
-            'display_name' => 'required|max:255',
-        ]);
-        $role->fill($request->except('permissions'));
-        $role->save();
-        if (count($request->get('permissions')) > 0){
+        if (count($request->except('permissions')) > 0) {
+            $request->validate([
+                'name' => 'required|unique:roles,name,' . $id . '|max:255',
+                'display_name' => 'required|max:255',
+            ]);
+            $role->fill($request->except('permissions'));
+            $role->save();
+        }
+        if (is_array($request->get('permissions'))){
             $role->syncPermissions($request->get('permissions'));
         }
         if ($this->isApi()){
