@@ -4,6 +4,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Watson\Validating\ValidationException;
+use App\Events\UserPermissions;
 
 class UsersController extends ProxyController
 {
@@ -63,6 +64,7 @@ class UsersController extends ProxyController
         $user = User::find($id);
         if (is_array($request->get('roles'))){
             $user->syncRoles($request->get('roles'));
+            event(new UserPermissions($user));
         }
         if ($this->isApi()){
             return $user;
